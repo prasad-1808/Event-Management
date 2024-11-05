@@ -17,7 +17,7 @@ services:
     environment:
       DATABASE_URL: postgres://admin:admin@db:5432/event_db
     ports:
-      - "5000"
+      - "5000:5000"
     depends_on:
       - db
 
@@ -27,7 +27,7 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "3000"
+      - "3000:3000"
     depends_on:
       - server
 
