@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaRegUserCircle, FaBars } from "react-icons/fa";
-import { GiExpense } from "react-icons/gi";
 
 const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
@@ -19,17 +18,14 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
   };
 
   return (
-    <nav
-      className="navbar navbar-expand-lg navbar-dark bg-dark fixed-top"
-      style={{ paddingTop: "0px", paddingBottom: "0.5px" }}
-    >
-      <div className="container-fluid unorderedList ">
-        <Link className="navbar-brand fs-2 text-white" to="/">
-          Event Manager <GiExpense />
+    <nav className="bg-gray-900 fixed top-0 w-full z-10">
+      <div className="container mx-auto flex justify-between items-center px-4 py-3">
+        <Link className="text-white text-2xl font-bold" to="/">
+          Event Manager
         </Link>
 
         <button
-          className="navbar-toggler"
+          className="text-white lg:hidden"
           type="button"
           onClick={toggleDropdown}
         >
@@ -37,70 +33,66 @@ const Navbar = ({ isLoggedIn, setIsLoggedIn }) => {
         </button>
 
         <div
-          className={`collapse navbar-collapse ${isDropdownOpen ? "show" : ""}`}
-          id="navbarNav"
+          className={`lg:flex lg:items-center lg:w-auto w-full ${
+            isDropdownOpen ? "block" : "hidden"
+          }`}
         >
-          <ul className="d-flex justify-content-end w-100 navbar-nav me-auto fs-4">
-            <li className="nav-item mx-3">
-              <Link className="nav-link text-white" to="/">
+          <ul className="lg:flex lg:justify-end w-full space-y-2 lg:space-y-0 lg:space-x-6 text-lg mt-4 lg:mt-0 text-white">
+            <li>
+              <Link className="hover:text-gray-400" to="/">
                 Home
               </Link>
             </li>
             {!isLoggedIn ? (
               <>
-                <li className="nav-item mx-3">
-                  <Link className="nav-link text-white" to="/login">
+                <li>
+                  <Link className="hover:text-gray-400" to="/login">
                     Login
                   </Link>
                 </li>
-                <li className="nav-item mx-3">
-                  <Link className="nav-link text-white" to="/register">
+                <li>
+                  <Link className="hover:text-gray-400" to="/register">
                     Register
                   </Link>
                 </li>
               </>
             ) : (
               <>
-                <li className="nav-item mx-3">
-                  <Link className="nav-link text-white" to="/dashboard">
+                <li>
+                  <Link className="hover:text-gray-400" to="/dashboard">
                     Dashboard
                   </Link>
                 </li>
-                <li className="nav-item mx-3">
-                  <Link className="nav-link text-white" to="/albums">
+                <li>
+                  <Link className="hover:text-gray-400" to="/albums">
                     Albums
                   </Link>
                 </li>
-                <li className="nav-item dropdown mx-3">
+                <li className="relative">
                   <FaRegUserCircle
-                    className="dropdown-toggle nav-item mx-4 fs-2 mt-2 nav-icon"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
+                    className="text-3xl cursor-pointer hover:text-gray-400"
+                    onClick={toggleDropdown}
                   />
-                  <ul
-                    className="dropdown-menu dropdown-menu-end"
-                    style={{
-                      marginTop: "1.75rem",
-                    }}
-                  >
-                    <li>
-                      <center>
-                        <Link className="dropdown-item" to="/profile">
+                  {isDropdownOpen && (
+                    <ul className="absolute right-0 bg-white text-gray-900 shadow-lg rounded-md mt-2 w-32 py-2">
+                      <li>
+                        <Link
+                          className="block px-4 py-2 hover:bg-gray-200 text-center"
+                          to="/profile"
+                        >
                           Profile
                         </Link>
-                      </center>
-                    </li>
-                    <li className="nav-item mx-3">
-                      <center>
+                      </li>
+                      <li>
                         <button
-                          className="dropdown-item"
+                          className="block w-full text-left px-4 py-2 hover:bg-gray-200"
                           onClick={handleLogout}
                         >
                           Logout
                         </button>
-                      </center>
-                    </li>
-                  </ul>
+                      </li>
+                    </ul>
+                  )}
                 </li>
               </>
             )}
