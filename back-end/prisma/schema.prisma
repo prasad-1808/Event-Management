@@ -1,0 +1,30 @@
+<<<<<<< HEAD
+=======
+// prisma/schema.prisma
+
+>>>>>>> c16c1b6d0949489962847c149eb7870d8ed825d2
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+<<<<<<< HEAD
+  id          Int    @id @default(autoincrement())
+  mobileNumber String @unique
+  password     String
+  role         String
+}
+=======
+  username  String   
+  mobile    String   @id()
+  email     String   @unique
+  password  String
+  EventDate DateTime @default(now())
+}
+
+>>>>>>> c16c1b6d0949489962847c149eb7870d8ed825d2
