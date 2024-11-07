@@ -17,21 +17,32 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { mobileNumber, password } = req.body;
+  const { mobileNumber, password, role } = req.body;
   try {
+    // Check if user exists with the provided mobile number
     const user = await prisma.user.findUnique({ where: { mobileNumber } });
-    if (!user) return res.status(401).json({ error: "Invalid credentials" });
+    if (!user) {
+      return res.status(400).json({ error: "User not found" });
+    }
 
-    const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid)
-      return res.status(401).json({ error: "Invalid credentials" });
+    // Check if role matches
+    if (user.role !== role) {
+      return res.status(400).json({ error: "Role mismatch" });
+    }
 
-    const token = jwt.sign({ userId: user.id, role: user.role }, JWT_SECRET, {
+    // Compare the hashed password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: "Incorrect password" });
+    }
+
+    // Generate and send token on successful login
+    const token = jwt.sign({ id: user.id }, "your_jwt_secret", {
       expiresIn: "1h",
     });
-    res.json({ message: "Login successful", token });
+    return res.json({ token });
   } catch (error) {
-    res.status(500).json({ error: "Login failed", details: error });
+    res.status(500).json({ error: "Server error", details: error.message });
   }
 };
 
