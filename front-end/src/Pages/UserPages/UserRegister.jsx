@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import axios from "axios";
+import api from "../../services/api";
 import "../../styles/Register.less";
 
 function UserRegister() {
@@ -7,20 +7,27 @@ function UserRegister() {
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("wedding_party");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/register", {
-        fullName,
+      const response = await api.post("/users/register", {
         mobileNumber,
+        fullName,
         password,
         role,
       });
       console.log("Registration successful:", response.data);
-      // Handle post-registration actions, like redirecting or showing a success message
+      setSuccessMessage("Registration successful!");
+      setErrorMessage("");
+      // Optionally, redirect or perform additional actions after registration
     } catch (error) {
-      console.error("Error registering:", error.response.data.message);
+      setErrorMessage(
+        error.response?.data?.error || "Registration failed. Please try again."
+      );
+      setSuccessMessage("");
     }
   };
 
@@ -31,6 +38,16 @@ function UserRegister() {
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Register</h2>
+
+        {errorMessage && (
+          <div className="text-red-500 text-center mb-4">{errorMessage}</div>
+        )}
+        {successMessage && (
+          <div className="text-green-500 text-center mb-4">
+            {successMessage}
+          </div>
+        )}
+
         <input
           type="text"
           placeholder="Full Name"

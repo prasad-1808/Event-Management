@@ -1,24 +1,29 @@
 import React, { useState } from "react";
-import axios from "axios";
-import "../../styles/Login.less";
+import api from "../../services/api";
+import "../../styles/Register.less";
 
 function UserLogin() {
   const [mobileNumber, setMobileNumber] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("wedding_party");
+  const [errorMessage, setErrorMessage] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await api.post("/users/login", {
         mobileNumber,
         password,
         role,
       });
       console.log("Login successful:", response.data);
-      // Save the token and redirect as needed
+      localStorage.setItem("token", response.data.token); // Save token
+      setErrorMessage("");
+      // Optionally, redirect after successful login
     } catch (error) {
-      console.error("Error logging in:", error.response.data.message);
+      setErrorMessage(
+        error.response?.data?.error || "Login failed. Please try again."
+      );
     }
   };
 
@@ -29,6 +34,11 @@ function UserLogin() {
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-bold mb-6 text-center">Login</h2>
+
+        {errorMessage && (
+          <div className="text-red-500 text-center mb-4">{errorMessage}</div>
+        )}
+
         <input
           type="text"
           placeholder="Mobile Number"
